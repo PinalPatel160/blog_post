@@ -12,6 +12,6 @@ function fail($errors, $message)
 {
     return [
         'message' => $message,
-        'errors' => $errors
+        'error' => $errors
     ];
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\StoreFileController;
+use App\Http\Resources\UsersResource;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -23,22 +24,22 @@ class RegisterController extends Controller
         $file = $request->file('avatar');
 
         //If user's profile exist then store and add in DB
-        if ($file) {
-            $request['avatar'] = (new StoreFileController())->storeFile($file,'avatar');
+        if ($request->file('avatar')) {
+            $filename = (new UserController())->uploadAvatar($request->file('avatar'));
         }
 
-        //Add api_token,password in request parameter
-        $request['api_token'] = Str::random(60);
+        //Add password in request parameter
         $request['password'] = Hash::make($request['password']);
 
-        $user = User::create($request->all());
+        $user = User::create(array_merge($request->all(), ['avatar' => isset($filename) ? $filename : null]));
+        $user->sendApiEmailVerificationNotification();
 
         if ($user) {
 
-            return success('','Before proceeding, please check your email for a verification link.');
+            return success($user, 'Please confirm yourself by clicking on verify user button sent to you on your email.');
         } else {
-            return fail('','Registration failed, please try again.');
 
+            return response()->json(['error' => 'Registration failed], please try again'], 201);
         }
     }
 

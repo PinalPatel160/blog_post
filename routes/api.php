@@ -17,11 +17,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/register', 'RegisterController@register');
+Route::post('/login', 'LoginController@login');
 
-Route::namespace('API')->group(function () {
+Route::get('email/verify/{id}', 'VerificationController@verify')->name('verificationapi.verify');
+Route::get('email/resend', 'VerificationController@resend')->name('verificationapi.resend');
 
-    Route::post('/register', 'RegisterController@register');
 
+Route::middleware('auth:api')->group(function () {
+    Route::get('/logout', 'LoginController@logout');
+    Route::get('user-profile','UserController@userProfile');
+    Route::put('user-profile','UserController@update');
 });
 
 Route::resource('BlogPost', 'BlogPostController');
