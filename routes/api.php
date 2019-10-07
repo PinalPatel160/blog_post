@@ -30,4 +30,5 @@ Route::middleware('auth:api')->group(function () {
     Route::put('user-profile','UserController@update');
 });
 
-Route::resource('BlogPost', 'BlogPostController');
+Route::resource('blogPost', 'BlogPostController');
+Route::resource('category', 'CategoryController');

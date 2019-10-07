@@ -48,7 +48,7 @@ class BlogPostController extends Controller
         $blogPost = BlogPost::create(array_merge($request->except('category_id'),
             ["image" => (new StoreFileController())->storeFile($file, 'blog_post')]
         ));
-        //return $request['category_id'];
+
         (new BlogCategoriesController())->mapCategoryWithBlog($blogPost->id, $request['category_id']);
 
         return success($blogPost, 'BlogPost created successfully');
