@@ -9,8 +9,10 @@ use App\Http\Controllers\StoreFileController;
 use App\Http\Requests\CreateBlogPostRequest;
 use App\Http\Requests\UpdateBlogPostRequest;
 use App\Http\Resources\BlogPostResource;
+use App\Mail\BlogPublishedEmail;
 use Illuminate\Http\Request;
 use Spatie\Searchable\Search;
+use Illuminate\Support\Facades\Mail;
 
 class BlogPostController extends Controller
 {
@@ -21,7 +23,9 @@ class BlogPostController extends Controller
      */
     public function index()
     {
-        $blogPosts = BlogPost::paginate(2);
+        $perPage = min(request('per_page', 2), 100);
+
+        $blogPosts = BlogPost::paginate($perPage);
 
         return BlogPostResource::collection($blogPosts);
     }
@@ -86,9 +90,38 @@ class BlogPostController extends Controller
      */
     public function update(UpdateBlogPostRequest $request, BlogPost $blogPost)
     {
+        if($request->hasFile('image')) {
+            $blogPost->image = $request->image->store('blog_post');
+        }
+
+        $blogPost->fill($request->all());
+        $blogPost->save();
+
+        return $blogPost;
+
+        $blogPost->togglePublish();
+        $blogPost->isPublished() ? $blogPost->unpublish() : $blogPost->publish();
+
         $file_name = isset($request['image']) ? (new StoreFileController())->storeFile($request->file('image'), 'blog_post') : $blogPost->image;
 
+        $is_published = $blogPost->is_published;
         $blogPost->update(array_merge($request->except('_method'), ["image" => $file_name]));
+
+        if($is_published == 0 && $request->is_published == 1)
+        {
+            $user_detail = auth()->user();
+            $blog_detail = array_merge($request->except('_method'),
+                [
+                    "image" => $file_name,
+                    "user_name" => $user_detail->name,
+                    "email" => 'pinal@pinetco.com'//$user_detail->email,
+                ]);
+            $subject = 'BlogPost: Blog Published';
+            $message = 'New blog published by ';
+
+            Mail::to('pinal@pinetco.com')->send(new BlogPublishedEmail($blog_detail, $subject, $message));
+
+        }
 
         return success(BlogPostResource::make($blogPost), 'BlogPost updated successfully');
     }

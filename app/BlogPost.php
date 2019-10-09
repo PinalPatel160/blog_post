@@ -25,4 +25,9 @@ class BlogPost extends Model implements Searchable
             route('blogPost.show', $this->id)
         );
     }
+
+    public function attachCategories($categories)
+    {
+        $this->categories()->attach($categories);
+    }
 }

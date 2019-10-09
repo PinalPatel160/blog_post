@@ -11,7 +11,7 @@ class StoreFileController extends Controller
     {
 
         $file_name = $destination_dir.'/'.uniqid() . '_' . $destination_dir . '_' . time() . '.' . $file->getClientOriginalExtension();
-        \Storage::putFileAs('public/' , $file,$file_name);
+        \Storage::putFileAs($file,$file_name);
 
         return $file_name;
 
