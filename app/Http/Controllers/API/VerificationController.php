@@ -28,10 +28,12 @@ class VerificationController extends Controller
      */
     public function verify(Request $request)
     {
-        $user = User::findOrFail($request['id'])->first();
+        $user = User::findOrFail($request['id']);
 
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'User already have verified email!'], 422);
+
+            $message = 'Your email already verified. Thanks!';
+            return view('email_verify', compact(['user', 'message']));
         }
 
         // to enable the “email_verified_at" field of that user be a current time stamp by the must verify email feature
@@ -41,8 +43,8 @@ class VerificationController extends Controller
         /*$user->update([
             'email_verified_at' => date('Y-m-d g:i:s')
         ]);*/
-
-        return success('', 'Email verified!');
+        $message = 'Your email has been successfully verified';
+        return view('email_verify', compact(['user', 'message']));
     }
 
     /**
@@ -57,11 +59,17 @@ class VerificationController extends Controller
             'email' => ['required', 'email'],
         ]))->first();
 
+        if (!$user){
+            return fail('','Email not exist ');
+        }
+
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'User already have verified email!'], 422);
+            $message = 'Your email already verified. Thanks!';
+            return view('email_verify', compact(['user', 'message']));
         }
 
         $user->sendApiEmailVerificationNotification();
+
         return success('', 'The notification has been resubmitted');
     }
 }

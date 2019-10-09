@@ -10,8 +10,8 @@ class StoreFileController extends Controller
     public function storeFile($file, $destination_dir)
     {
 
-        $file_name = uniqid() . '_' . $destination_dir . '_' . time() . '.' . $file->getClientOriginalExtension();
-        \Storage::putFileAs('public/' . $destination_dir, $file, $file_name);
+        $file_name = $destination_dir.'/'.uniqid() . '_' . $destination_dir . '_' . time() . '.' . $file->getClientOriginalExtension();
+        \Storage::putFileAs('public/' , $file,$file_name);
 
         return $file_name;
 

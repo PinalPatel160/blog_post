@@ -10,6 +10,7 @@ use App\Http\Requests\CreateBlogPostRequest;
 use App\Http\Requests\UpdateBlogPostRequest;
 use App\Http\Resources\BlogPostResource;
 use Illuminate\Http\Request;
+use Spatie\Searchable\Search;
 
 class BlogPostController extends Controller
 {
@@ -98,5 +99,17 @@ class BlogPostController extends Controller
 
         return success([], 'BlogPost deleted successfully!');
 
+    }
+
+    public function search()
+    {
+        \request()->validate([
+            'query' => ['required'],
+        ]);
+        $searchResults = (new Search())
+            ->registerModel(BlogPost::class, ['title','sub_title'])
+            ->search(\request('query'));
+
+        return BlogPostResource::make($searchResults);
     }
 }

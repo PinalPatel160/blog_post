@@ -38,6 +38,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends=['profile'];
+
+    public function getProfileAttribute(){
+        return url($this->avatar);
+    }
+
     public function sendApiEmailVerificationNotification()
     {
         $this->notify(new VerifyApiEmail);
