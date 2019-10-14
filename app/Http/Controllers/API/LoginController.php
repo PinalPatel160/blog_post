@@ -21,7 +21,7 @@ class LoginController extends Controller
     {
         $request->validate([
             'email'    => 'required|string|email|max:260|min:5',
-            'password' => 'required|string',
+            'password' => 'required|min:8',
         ]);
 
         if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
@@ -34,7 +34,7 @@ class LoginController extends Controller
                 return success($user, 'Login successfully');
             } else {
 
-                return response()->json(['error' => 'Please Verify Email'], 401);
+                return response()->json(['error' => 'Please verify email'], 401);
             }
         } else {
 
@@ -47,7 +47,7 @@ class LoginController extends Controller
 
         if (auth()->user()->update(['api_token' => null])) {
             return response()->json([
-                'message' => 'User Logged Out',
+                'message' => 'User logged out',
             ]);
         } else {
             return response()->json([

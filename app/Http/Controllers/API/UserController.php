@@ -17,22 +17,19 @@ class UserController extends Controller
      */
     public function userProfile()
     {
-        return success(auth()->user(), 'User Profile Fetched successfully.');
+        return success(auth()->user(), 'User\'s profile fetched successfully.');
     }
 
     public function update(ProfileUpdateRequest $request)
     {
-        if ($request->file('avatar')) {
-            $filename = $this->uploadAvatar($request->file('avatar'));
+
+        if ($request->hasFile('avatar')) {
+            $filename = $request->avatar->store('avatar');
         }
+
         auth()->user()->update(array_merge($request->all(), isset($filename) ? ['avatar' => $filename] : []));
 
         return success('', 'Profile updated successfully.');
 
-    }
-
-    public function uploadAvatar($file)
-    {
-        return $filename = (new StoreFileController())->storeFile($file, 'avatar');
     }
 }

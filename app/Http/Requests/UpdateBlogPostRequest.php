@@ -24,10 +24,9 @@ class UpdateBlogPostRequest extends FormRequest
     public function rules()
     {
         return [
-            'image' => 'image|dimensions:min_width=200,min_height=200',
-            'title' => 'max:255',
-            'sub_title' => 'max:255',
-            'is_published' => 'boolean',
+            'image'        => 'image|dimensions:min_width=200,min_height=200|mimes:jpeg,png',
+            'title'        => 'max:255',
+            'sub_title'    => 'max:255',
             'published_at' => 'date_format:Y-m-d H:i:s',
         ];
     }

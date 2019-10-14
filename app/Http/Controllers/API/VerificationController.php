@@ -6,9 +6,6 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\Request;
-use Illuminate\Auth\Events\Verified;
-use App\Http\Resources\UsersResource;
-use Illuminate\Support\Facades\Validator;
 
 class VerificationController extends Controller
 {
@@ -36,13 +33,10 @@ class VerificationController extends Controller
             return view('email_verify', compact(['user', 'message']));
         }
 
-        // to enable the “email_verified_at" field of that user be a current time stamp by the must verify email feature
+        //To enable the “email_verified_at" field of that user be a current time stamp by the must verify email feature
         $user->email_verified_at = date('Y-m-d g:i:s');
         $user->update();
 
-        /*$user->update([
-            'email_verified_at' => date('Y-m-d g:i:s')
-        ]);*/
         $message = 'Your email has been successfully verified';
         return view('email_verify', compact(['user', 'message']));
     }
@@ -60,7 +54,7 @@ class VerificationController extends Controller
         ]))->first();
 
         if (!$user){
-            return fail('','Email not exist ');
+            return response()->json('Email not exist.',404);
         }
 
         if ($user->hasVerifiedEmail()) {

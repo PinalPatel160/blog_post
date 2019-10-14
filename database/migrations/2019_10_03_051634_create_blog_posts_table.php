@@ -20,7 +20,6 @@ class CreateBlogPostsTable extends Migration
             $table->string('image');
             $table->char('title');
             $table->char('sub_title');
-            $table->boolean('is_published')->comment('True=published blog posts, False=unpublished blog posts');
             $table->dateTime('published_at')->nullable('true')->comment('Date of post published');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

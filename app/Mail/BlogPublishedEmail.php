@@ -11,16 +11,19 @@ class BlogPublishedEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
+    protected $blog_detail;
+
+    protected $user;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($blog_detail,$subject,$message)
+    public function __construct($blog_detail,$user)
     {
         $this->blog_detail = $blog_detail;
-        $this->subject = $subject;
-        $this->message = $message;
+        $this->user = $user;
     }
 
     /**
@@ -31,6 +34,7 @@ class BlogPublishedEmail extends Mailable implements ShouldQueue
     public function build()
     {
         $blog_detail = $this->blog_detail;
-        return $this->subject('Subject')->markdown('mail.blog_published_email',compact('blog_detail'));
+        $user = $this->user;
+        return $this->subject('BlogPost: Blog Published')->markdown('mail.blog_published_email', compact(['blog_detail','user']));
     }
 }

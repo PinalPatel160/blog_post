@@ -29,8 +29,11 @@ Route::get('email/verify/{id}', 'VerificationController@verify')->name('verifica
 //Resend mail for email verification
 Route::get('email/resend', 'VerificationController@resend')->name('verificationapi.resend');
 
-Route::get('blogPost', 'BlogPostController@index');
-Route::get('blogPost/{id}', 'BlogPostController@show');
+Route::get('blog-post', 'BlogPostController@index');
+Route::get('blog-post/{id}', 'BlogPostController@show');
+
+//Blog searching
+Route::get('blog/post/search', 'BlogPostController@search');
 
 Route::middleware('auth:api')->group(function () {
 
@@ -41,10 +44,11 @@ Route::middleware('auth:api')->group(function () {
     Route::get('user-profile','UserController@userProfile');
     Route::put('user-profile','UserController@update');
 
-    //Blog searching
-    Route::get('blogPost/search','BlogPostController@search');
+    Route::resource('blog/post', 'BlogPostController');
 
-    Route::resource('blogPost', 'BlogPostController');
+    Route::resource('categories', 'CategoryController');
 
-    Route::resource('category', 'CategoryController');
+    Route::post('blog-published/{blogPost}', 'BlogPublishedController@store');
+    Route::delete('blog-published/{blogPost}', 'BlogPublishedController@destroy');
+
 });

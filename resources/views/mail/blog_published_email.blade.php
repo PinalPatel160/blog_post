@@ -1,14 +1,17 @@
 @component('mail::message')
-# Hello, {{$blog_detail['user_name']}}
-{{$blog_detail['title']}}
-{{$blog_detail['sub_title']}}
-{{$blog_detail['description']}}
 
+# Hello, {{$user['name']}}
 
-@component('mail::button', ['url' => "/blogPost/"])
+<h2>{{$blog_detail['title']}}</h2>
+
+<p class="head">{{$blog_detail['sub_title']}}</p>
+<p>{{ str_limit($blog_detail['description'], $limit = 150, $end = '...')}}</p>
+
+@component('mail::button', ['url' => "/blogPost/".$blog_detail['id']])
 Read More
 @endcomponent
 
+<p>Published by, {{$blog_detail['user']['name']}}</p>
 Thanks,<br>
 {{ config('app.name') }}
 @endcomponent

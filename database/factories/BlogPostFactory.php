@@ -17,7 +17,6 @@ $factory->define(BlogPost::class, function (Faker $faker) {
         'image' => 'test_blog_image.jpg',
         'title' => $title,
         'sub_title' => $sub_title,
-        'is_published' => 1,
         'published_at' => now(),
     ];
 });

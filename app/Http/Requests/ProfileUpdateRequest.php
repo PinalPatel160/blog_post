@@ -24,9 +24,9 @@ class ProfileUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'   => 'min:3',
+            'name'   => 'min:3|alpha',
             'gender' => 'in:male,female',
-            'avatar' => 'dimensions:max_width=201,max_height=201|mimes:jpeg,png'
+            'avatar' => 'dimensions:max_width=201,max_height=201|mimes:jpeg,png',
         ];
     }
 }

@@ -24,11 +24,10 @@ class CreateBlogPostRequest extends FormRequest
     public function rules()
     {
         return [
-            'description' => 'required',
-            'image' => 'required|image|dimensions:min_width=200,min_height=200',
-            'title' => 'required|max:255',
-            'sub_title' => 'required|max:255',
-            'is_published' => 'required|boolean',
+            'description'  => 'required',
+            'image'        => 'required|image|dimensions:min_width=200,min_height=200|mimes:jpeg,png',
+            'title'        => 'required|max:255',
+            'sub_title'    => 'required|max:255',
             'published_at' => 'date_format:Y-m-d H:i:s',
         ];
     }
